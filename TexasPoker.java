@@ -8,12 +8,12 @@ import java.util.HashMap;
 public class TexasPoker implements Poker{
     // key: index(card as int), value: numbers of the card.
     private HashMap<Integer, Integer> xCards = new HashMap<>();
-    private HashMap<Integer, Integer> yCards = new HashMap<>();
+    // private HashMap<Integer, Integer> yCards = new HashMap<>();
     private ArrayList<String> xCardsList = new ArrayList<>();
-    private ArrayList<String> yCardsList = new ArrayList<>();
+    // private ArrayList<String> yCardsList = new ArrayList<>();
     // true means X, false means Y.
     //public boolean turn = true;
-    public boolean finalState = false;
+    // public boolean finalState = false;
 
     @Override
     public void initCard(){
@@ -26,10 +26,17 @@ public class TexasPoker implements Poker{
 
     @Override
     public void play() {
-        addCard('X', nextCard());
-        addCard('Y', nextCard());
+        addCard(nextCard());
+        // addCard('Y', nextCard());
     }
 
+    public HashMap<Integer, Integer> getxCards(){
+        return xCards;
+    }
+
+    public ArrayList<String> getxCardsList() {
+        return xCardsList;
+    }
 
     private int nextCard(){
         int index = Rand.randInt(0, 12);
@@ -39,29 +46,28 @@ public class TexasPoker implements Poker{
         return index;
     }
 
-    private void addCard(char player, int index){
-        if (player == 'X'){
-            if (xCards.containsKey(index)){
-                xCards.put(index, xCards.get(index) + 1);
-            }
-            else{
-                xCards.put(index, 1);
-            }
-            xCardsList.add(letterCards[index]);
+    private void addCard(int index){
+        if (xCards.containsKey(index)){
+            xCards.put(index, xCards.get(index) + 1);
         }
         else{
-            if (yCards.containsKey(index)){
-                yCards.put(index, yCards.get(index) + 1);
-            }
-            else{
-                yCards.put(index, 1);
-            }
-            yCardsList.add(letterCards[index]);
+            xCards.put(index, 1);
         }
+        xCardsList.add(letterCards[index]);
+//        else{
+//            if (yCards.containsKey(index)){
+//                yCards.put(index, yCards.get(index) + 1);
+//            }
+//            else{
+//                yCards.put(index, 1);
+//            }
+//            yCardsList.add(letterCards[index]);
+//        }
     }
 
     // 0 means X wins, 1 means Y wins.
-    public int evaluate(){
+    public static int evaluate(HashMap<Integer, Integer>xCards,
+                               HashMap<Integer, Integer>yCards){
         int xMax = 0;
         int yMax = 0;
         int result = -1;
@@ -143,7 +149,7 @@ public class TexasPoker implements Poker{
                     for (int key2:yArray) {
                         yCards.remove(key2);
                     }
-                    result = this.evaluate();
+                    result = evaluate(xCards, yCards);
                 }
             }
         }
@@ -151,11 +157,12 @@ public class TexasPoker implements Poker{
         return result;
     }
 
-    public void printCurrentStage(){
+    public static void printCurrentStage(ArrayList<String> xCardsList,
+                                  ArrayList<String> yCardsList, boolean finalState){
         int i = 0;
         String cardy;
         for(String ycard:yCardsList) {
-            if (!this.finalState && i == 0){
+            if (!finalState && i == 0){
                 cardy = "* ";
             }
             else{
@@ -175,8 +182,8 @@ public class TexasPoker implements Poker{
         System.out.println();
     }
 
-    public void isFinalStage(){
-        this.finalState = true;
-    }
+//    public void isFinalStage(){
+//        this.finalState = true;
+//    }
 
 }

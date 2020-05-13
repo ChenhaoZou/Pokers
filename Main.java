@@ -40,9 +40,12 @@ public class Main {
         System.out.println("Let's start!");
         int i = 0;
         TexasPoker Po = new TexasPoker();
+        TexasPoker Po2 = new TexasPoker();
         BufferedReader reader =
                 new BufferedReader(new InputStreamReader(System.in));
         Po.initCard();
+        Po2.initCard();
+        boolean finalState = false;
         while(i < 5){
             if (i != 0){
                 System.out.println("Continue playing? <Y, N>");
@@ -50,21 +53,24 @@ public class Main {
                 String answ = reader.readLine();
 
                 if (answ.equals("N") || answ.equals("n")){
-                    Po.isFinalStage();
-                    Po.printCurrentStage();
+                    finalState = true;
+                    TexasPoker.printCurrentStage(Po.getxCardsList(),
+                            Po2.getxCardsList(), finalState);
                     break;
                 }
             }
 
             Po.play();
+            Po2.play();
             if (i == 4){
-                Po.isFinalStage();
+                finalState = true;
             }
-            Po.printCurrentStage();
+            TexasPoker.printCurrentStage(Po.getxCardsList(),
+                    Po2.getxCardsList(), finalState);
             i ++;
         }
 
-        int result = Po.evaluate();
+        int result = TexasPoker.evaluate(Po.getxCards(), Po2.getxCards());
 
         if (result == 0){
             System.out.println("You Win!!!");
